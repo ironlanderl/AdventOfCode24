@@ -21,7 +21,7 @@ pub fn day1a(){
 
 pub fn day1b(){
     let contents = read_file("inputs/day1.txt".to_string());
-    let (mut col1, mut  col2) = load_matrix_to_variable(contents);
+    let (col1, col2) = load_matrix_to_variable(contents);
     let mut sum: i64 = 0;
 
     // Data loaded. No need to sort this time
