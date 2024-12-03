@@ -59,12 +59,18 @@ pub fn day3a() {
 pub fn day3b() {
     let mut content = read_file("inputs/day3.txt".to_string());
 
+    // Make the content single lined
+    content = content.replace('\n', "");
+
     // Welp. It's fucking absurd regex time.
     // Remove everything between don't and do.
-    let cleanup_reg = Regex::new(r"don't\(\)\S*?do\(\)").unwrap();
+    //println!("Content before regex: {:?}", content);
+    let cleanup_reg = Regex::new(r"don't\(\)[\S\s]*?(do\(\)|$)").unwrap();
+    //println!("Regex: {:?}", cleanup_reg);
     content = cleanup_reg.replace_all(&content, "").to_string();
+    //println!("Content after regex: {:?}", content);
 
-    // Extract conly mul(number,number)
+    // Extract only mul(number,number)
     let mults_reg = Regex::new(r"(?m)mul\(\d+,\d+\)").unwrap();
 
     let mults: Vec<&str> = mults_reg.find_iter(&content).map(|m| m.as_str()).collect();
