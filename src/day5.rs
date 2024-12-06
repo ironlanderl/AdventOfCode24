@@ -28,7 +28,8 @@ pub fn day5a(filename: &str) -> i64 {
 
 pub fn day5b(filename: &str) -> i64 {
     let (constraints, updates) = get_data(filename);
-    let solution = solve_p2(constraints, updates);
+    //let solution = solve_p2(constraints, updates);
+    let solution = -1;
     println!("Solution: {:?}", solution);
     solution
 }
