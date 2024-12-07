@@ -4,6 +4,7 @@ mod day3;
 mod day4;
 mod day5;
 mod day6;
+mod day7;
 
 mod utils;
 
@@ -13,6 +14,7 @@ use day3::{day3a, day3b};
 use day4::{day4a};
 use day5::{day5a, day5b};
 use day6::{day6a, day6b};
+use day7::{day7a, day7b};
 
 use log::{debug, error, log_enabled, info, Level};
 
@@ -35,4 +37,7 @@ fn main() {
     println!("Day 6");
     day6a("inputs/day6.txt");
     //day6b("inputs/day6.txt");
+    println!("Day 7");
+    day7a("inputs/day7.txt");
+    day7b("inputs/day7.txt");
 }
