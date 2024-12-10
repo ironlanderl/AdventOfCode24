@@ -2,6 +2,7 @@ use std::iter::repeat_n;
 
 use crate::utils::read_file;
 use itertools::Itertools;
+use rayon::prelude::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 enum OperationTypes {
@@ -39,92 +40,90 @@ fn get_data(input_file: &str) -> (Vec<i64>, Vec<Vec<i64>>) {
 }
 
 fn solve_p1(solutions: Vec<i64>, equations: Vec<Vec<i64>>) -> i64 {
-    let mut solution: i64 = 0;
+    equations
+        .par_iter()
+        .enumerate()
+        .map(|(i, equation)| {
+            let possible_operations = vec![OperationTypes::SUM, OperationTypes::MUL].into_iter();
+            let possible_ops =
+                repeat_n(possible_operations, equation.len() - 1).multi_cartesian_product();
 
-    for (i, equation) in equations.iter().enumerate() {
-        let possible_operations = vec![OperationTypes::SUM, OperationTypes::MUL].into_iter();
-        let possible_ops =
-            repeat_n(possible_operations, equation.len() - 1).multi_cartesian_product();
-
-        for (j, stuff) in possible_ops.enumerate() {
-            let mut res: i64 = 0;
-            for (k, operator) in stuff.into_iter().enumerate() {
-                if k == 0 {
-                    match operator {
-                        OperationTypes::SUM => res += equation[k] + equation[k + 1],
-                        OperationTypes::MUL => res += equation[k] * equation[k + 1],
-                        OperationTypes::CON => todo!(),
-                    }
-                } else {
-                    match operator {
-                        OperationTypes::SUM => res += equation[k + 1],
-                        OperationTypes::MUL => res *= equation[k + 1],
-                        OperationTypes::CON => todo!(),
+            for stuff in possible_ops {
+                let mut res: i64 = 0;
+                for (k, operator) in stuff.into_iter().enumerate() {
+                    if k == 0 {
+                        match operator {
+                            OperationTypes::SUM => res += equation[k] + equation[k + 1],
+                            OperationTypes::MUL => res += equation[k] * equation[k + 1],
+                            OperationTypes::CON => todo!(),
+                        }
+                    } else {
+                        match operator {
+                            OperationTypes::SUM => res += equation[k + 1],
+                            OperationTypes::MUL => res *= equation[k + 1],
+                            OperationTypes::CON => todo!(),
+                        }
                     }
                 }
+                if res == solutions[i] {
+                    return res;
+                }
             }
-            if res == solutions[i] {
-                solution += res;
-                break;
-            }
-        }
-
-        // println!("Test: {:?}", maxj);
-    }
-
-    solution
+            0
+        })
+        .sum()
 }
 
 fn solve_p2(target_solutions: Vec<i64>, equations: Vec<Vec<i64>>) -> i64 {
-    let mut total_solution: i64 = 0;
+    equations
+        .par_iter()
+        .enumerate()
+        .map(|(index, equation)| {
+            let possible_operations = vec![
+                OperationTypes::SUM,
+                OperationTypes::MUL,
+                OperationTypes::CON,
+            ]
+            .into_iter();
+            let possible_combinations =
+                repeat_n(possible_operations, equation.len() - 1).multi_cartesian_product();
 
-    for (index, mut equation) in equations.into_iter().enumerate() {
-        let possible_operations = vec![
-            OperationTypes::SUM,
-            OperationTypes::MUL,
-            OperationTypes::CON,
-        ]
-        .into_iter();
-        let possible_combinations =
-            repeat_n(possible_operations, equation.len() - 1).multi_cartesian_product();
-
-        for operations in possible_combinations {
-            let mut result: i64 = 0;
-            for (op_index, operation) in operations.into_iter().enumerate() {
-                if op_index == 0 {
-                    match operation {
-                        OperationTypes::SUM => {
-                            result += equation[op_index] + equation[op_index + 1];
+            for operations in possible_combinations {
+                let mut result: i64 = 0;
+                for (op_index, operation) in operations.into_iter().enumerate() {
+                    if op_index == 0 {
+                        match operation {
+                            OperationTypes::SUM => {
+                                result += equation[op_index] + equation[op_index + 1];
+                            }
+                            OperationTypes::MUL => {
+                                result += equation[op_index] * equation[op_index + 1];
+                            }
+                            OperationTypes::CON => {
+                                result = concat(equation[op_index], equation[op_index + 1]);
+                            }
                         }
-                        OperationTypes::MUL => {
-                            result += equation[op_index] * equation[op_index + 1];
-                        }
-                        OperationTypes::CON => {
-                            result = concat(equation[op_index], equation[op_index + 1]);
-                        }
-                    }
-                } else {
-                    match operation {
-                        OperationTypes::SUM => {
-                            result += equation[op_index + 1];
-                        }
-                        OperationTypes::MUL => {
-                            result *= equation[op_index + 1];
-                        }
-                        OperationTypes::CON => {
-                            result = concat(result, equation[op_index + 1]);
+                    } else {
+                        match operation {
+                            OperationTypes::SUM => {
+                                result += equation[op_index + 1];
+                            }
+                            OperationTypes::MUL => {
+                                result *= equation[op_index + 1];
+                            }
+                            OperationTypes::CON => {
+                                result = concat(result, equation[op_index + 1]);
+                            }
                         }
                     }
                 }
+                if result == target_solutions[index] {
+                    return result;
+                }
             }
-            if result == target_solutions[index] {
-                total_solution += result;
-                break;
-            }
-        }
-    }
-
-    total_solution
+            0
+        })
+        .sum()
 }
 
 pub fn day7a(input_file: &str) -> i64 {
