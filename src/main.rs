@@ -5,6 +5,7 @@ mod day4;
 mod day5;
 mod day6;
 mod day7;
+mod day9;
 mod day10;
 mod day11;
 
@@ -17,6 +18,7 @@ use day4::{day4a};
 use day5::{day5a, day5b};
 use day6::{day6a, day6b};
 use day7::{day7a, day7b};
+use day9::{day9a, day9b};
 use day10::{day10a, day10b};
 use day11::{day11a, day11b};
 
@@ -44,12 +46,15 @@ fn main() {
     println!("Day 7");
     //day7a("inputs/day7.txt");
     //day7b("inputs/day7.txt");
+    println!("Day 9");
+    day9a("inputs/day9.txt");
+    day9b("inputs/day9.txt");
     println!("Day 10");
     //day10a("inputs/day10.txt");
     //day10b("inputs/day10.txt");
     println!("Day 11");
-    day11a("inputs/day11.txt");
-    day11b("inputs/day11.txt");
+    //day11a("inputs/day11.txt");
+    //day11b("inputs/day11.txt");
 }
 
 
