@@ -10,6 +10,7 @@ mod day10;
 mod day11;
 mod day12;
 mod day13;
+mod day14;
 
 mod utils;
 
@@ -25,6 +26,7 @@ use day10::{day10a, day10b};
 use day11::{day11a, day11b};
 use day12::{day12a, day12b};
 use day13::{day13a,day13b};
+use day14::{day14a,day14b};
 
 use log::{debug, error, log_enabled, info, Level};
 
@@ -60,11 +62,14 @@ fn main() {
     //day11a("inputs/day11.txt");
     //day11b("inputs/day11.txt");
     println!("Day 12");
-    day12a("inputs/day12.txt");
-    day12b("inputs/day12.txt");
+    //day12a("inputs/day12.txt");
+    //day12b("inputs/day12.txt");
     println!("Day 13");
-    day13a("inputs/day13.txt");
-    day13b("inputs/day13.txt");
+    //day13a("inputs/day13.txt");
+    //day13b("inputs/day13.txt");
+    println!("Day 14");
+    day14a("inputs/day14.txt", 100, 101, 103);
+    day14b("inputs/day14.txt", 101, 103);
 }
 
 
